@@ -21,7 +21,7 @@
     </div>
 
     <v-row>
-      <v-col v-for="topic in topics" :key="topic.id" cols="12" md="4">
+      <v-col v-for="(topic, index) in topics" :key="topic.id" cols="12" md="4">
         <v-card 
           class="h-100 d-flex flex-column transition-swing" 
           hover 
@@ -30,7 +30,7 @@
           border
         >
           <v-img
-            :src="topic.image"
+            :src="images[index]"
             height="220"
             cover
             class="align-end"
@@ -69,6 +69,34 @@
 
 <script setup lang="ts">
 import { topics } from '../data/topics';
+import phishing from '../assets/img/phishing.jpg'
+import password from '../assets/img/passwords.jpg'
+import cyber from '../assets/img/cyber_hygiene.jpeg'
+import social from '../assets/img/social_engineering.jpeg'
+import malware from '../assets/img/malware.jpeg'
+import mobile from '../assets/img/mobile.jpeg'
+import physical from '../assets/img/physical.jpeg'
+import removal from '../assets/img/removal.jpeg'
+import safe from '../assets/img/safe.jpeg'
+import osint from '../assets/img/osint.jpeg'
+import remote from '../assets/img/remote.jpeg'
+import iot from '../assets/img/iot.jpeg'
+
+const images = [
+  phishing,
+  password,
+  cyber,
+  social,
+  malware,
+  mobile,
+  physical,
+  removal,
+  safe,
+  osint,
+  remote,
+  iot
+]
+
 </script>
 
 <style scoped>

@@ -18,7 +18,7 @@
     <v-window v-model="tab" class="mt-6">
       <v-window-item value="learn">
         <v-card variant="flat" color="transparent">
-          <v-img :src="topic.image" height="300" cover class="rounded-lg mb-6 bg-grey-lighten-2"></v-img>
+          <v-img :src="images[topic.id]" height="300" cover class="rounded-lg mb-6 bg-grey-lighten-2"></v-img>
           <div class="text-body-1 content-html" v-html="topic.content"></div>
         </v-card>
       </v-window-item>
@@ -41,11 +41,38 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { topics } from '../data/topics';
 import QuizComponent from '../components/QuizComponent.vue';
+import phishing from '../assets/img/phishing.jpg'
+import password from '../assets/img/passwords.jpg'
+import cyber from '../assets/img/cyber_hygiene.jpeg'
+import social from '../assets/img/social_engineering.jpeg'
+import malware from '../assets/img/malware.jpeg'
+import mobile from '../assets/img/mobile.jpeg'
+import physical from '../assets/img/physical.jpeg'
+import removal from '../assets/img/removal.jpeg'
+import safe from '../assets/img/safe.jpeg'
+import osint from '../assets/img/osint.jpeg'
+import remote from '../assets/img/remote.jpeg'
+import iot from '../assets/img/iot.jpeg'
 
+const images = ref()
 const route = useRoute();
 const tab = ref('learn');
 
 const topic = computed(() => {
+  images.value = {
+  phishing: phishing,
+  passwords: password,
+  hygiene: cyber,
+  "social-engineering": social,
+  malware: malware,
+  "mobile-security": mobile,
+  "physical-security": physical,
+  "usb-security": removal,
+  "safe-browsing": safe,
+  "data-privacy": osint,
+  "remote-work": remote,
+  "iot-security": iot
+}
   return topics.find(t => t.id === route.params.id);
 });
 </script>
