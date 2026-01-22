@@ -116,7 +116,7 @@
             :class="isCorrect(index) ? 'border-success' : 'border-error'"
           >
             <v-expansion-panel-title>
-              <template v-slot:default="{ expanded }">
+              <template>
                 <v-row no-gutters>
                   <v-col cols="1" class="d-flex justify-center">
                      <v-icon :color="isCorrect(index) ? 'success' : 'error'">
