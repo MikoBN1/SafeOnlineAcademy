@@ -89,51 +89,51 @@ export const topics: Topic[] = [
     {
         id: 'passwords',
         title: 'Password & Auth Security',
-        description: 'Entropy, Passphrases, and Multi-Factor Authentication.',
+        description: 'Complexity, Hygiene, and Multi-Factor Authentication.',
         icon: 'mdi-lock',
-        image: 'https://placehold.co/600x400?text=Strong+Passwords',
+        image: 'https://placehold.co/600x400?text=Complex+Security',
         content: `
-      <h2>Why "Password123" Fails</h2>
-      <p>Hackers don't guess passwords manually; they use "Brute Force" tools that can guess billions of combinations per second. A short password (8 characters) can be cracked in minutes.</p>
+      <h2>Why Complexity Matters</h2>
+      <p>While length is important, using a diverse <strong>set of characters</strong> is a critical component of strong password hygiene. Hackers use sophisticated tools to guess credentials, so reliance on simple words—even long ones—can leave you vulnerable if the words are in a dictionary.</p>
 
       <h3>The Power of Entropy (Randomness)</h3>
-      <p>Length beats complexity. A password like <code style="color:red">Tr0ub4dor&3</code> (complex but short) is harder for humans to remember but easier for computers to guess than <code style="color:green">correct horse battery staple</code> (long but simple words).</p>
+      <p>The most secure passwords combine <strong>length</strong> with a <strong>mix of character types</strong> (symbols, numbers, uppercase, and lowercase). A password like <code style="color:green">Jhk207991@alg</code> is superior because it disrupts dictionary attacks while maintaining sufficient length to resist brute force.</p>
 
       <h3>🛡️ The Golden Rules</h3>
       <ul>
-        <li><strong>Use Passphrases:</strong> Combine 4 random words: <em>Purple-Tractor-Jump-Galaxy</em>. It's long (25+ chars) and easy to type.</li>
-        <li><strong>MFA / 2FA:</strong> Multi-Factor Authentication requires something you <em>know</em> (password) and something you <em>have</em> (phone/token). Even if a hacker steals your password, they can't get in without the code.</li>
-        <li><strong>Salt & Hash:</strong> (For devs) Never store passwords in plain text. Use algorithms like Bcrypt or Argon2.</li>
+        <li><strong>Mix Your Characters:</strong> Ensure your password policy includes a full set of characters: uppercase, lowercase, numbers, and symbols.</li>
+        <li><strong>Avoid Reuse:</strong> 54% of employees use the same password across multiple platforms. This allows hackers to use a password leaked from one site to unlock your other accounts (Credential Stuffing).</li>
+        <li><strong>MFA / 2FA:</strong> Multi-Factor Authentication adds an extra layer of security by verifying the user's identity through a separate device or token, ensuring access is restricted even if the password is compromised[cite: 304].</li>
       </ul>
 
       <div style="background-color: #fff3cd; padding: 15px; border-left: 5px solid #ffc107; margin-top: 10px;">
-        <strong>⚠️ Warning:</strong> Avoid "substitution" patterns. Changing "a" to "@" or "i" to "1" is the first thing hacker dictionaries check.
+        <strong>⚠️ Warning:</strong> Never write your passwords down. Research shows 22% of employees still write passwords on paper to remember them, which is a major security risk.
       </div>
     `,
         questions: [
             {
                 id: 1,
-                text: 'Which password is statistically the hardest for a computer to crack?',
+                text: 'According to the research, which password strategy represents good hygiene?',
                 options: [
-                    'P@ssw0rd1!',
-                    'J8#kL2!',
-                    'Blue-Whale-Singing-Loudly-Under-Water',
-                    'Admin12345'
+                    'password123 (Simple and easy to remember)',
+                    'admin (Default)',
+                    'Jhk207991@alg (Long combination with a set of mixed characters)',
+                    'Writing the password on a sticky note'
                 ],
                 correctAnswer: 2,
-                explanation: 'Length adds exponentially more "entropy" (randomness) than complexity does. 4 random words are easier to remember and harder to crack.',
+                explanation: 'Good password hygiene requires "long password combinations" that also comprise a "set of characters" (complexity) to prevent unauthorized access.',
             },
             {
                 id: 2,
-                text: 'What is Credential Stuffing?',
+                text: 'Why is password reuse considered poor cyber hygiene?',
                 options: [
-                    'Making up new passwords',
-                    'Taking a leaked password from Site A and trying it on Site B',
-                    'Sharing passwords with friends',
-                    'Typing passwords really fast'
+                    'It makes the password harder to remember',
+                    'It causes the password to expire faster',
+                    'If one site is breached, hackers can access your other accounts (Credential Stuffing)',
+                    'It violates copyright laws'
                 ],
-                correctAnswer: 1,
-                explanation: 'Because people reuse passwords, hackers take lists of leaked passwords (dumps) and try them on Amazon, Facebook, and Gmail automatically.',
+                correctAnswer: 2,
+                explanation: 'Using the same password across platforms is a major issue (practiced by 54% of employees) because a single breach exposes all your accounts.',
             },
         ],
     },
