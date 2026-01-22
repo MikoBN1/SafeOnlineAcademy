@@ -7,9 +7,13 @@
       <p class="text-h5 font-weight-light mb-8 text-rgba-white-90">
         Your ultimate guide to staying safe and secure on the internet. Master cybersecurity basics today.
       </p>
-      <v-btn color="secondary" size="x-large" variant="elevated" elevation="4" rounded="pill" href="#topics">
+      <v-btn color="secondary" size="x-large" variant="elevated" elevation="4" rounded="pill" href="#topics" class="mb-4">
         Start Learning Now
         <v-icon end icon="mdi-arrow-down-circle-outline"></v-icon>
+      </v-btn>
+      <v-btn color="white" size="x-large" variant="outlined" rounded="pill" to="/training/phishing">
+        Phishing Simulator
+        <v-icon end icon="mdi-email-alert"></v-icon>
       </v-btn>
     </div>
   </v-sheet>

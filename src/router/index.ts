@@ -15,6 +15,11 @@ const router = createRouter({
             name: 'topic',
             component: TopicView,
         },
+        {
+            path: '/training/phishing',
+            name: 'phishing-training',
+            component: () => import('../views/PhishingTrainingView.vue')
+        },
     ],
 })
 
