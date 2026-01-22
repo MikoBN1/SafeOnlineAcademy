@@ -17,7 +17,7 @@
 
     <v-window v-model="tab" class="mt-6">
       <v-window-item value="learn">
-        <v-card variant="flat">
+        <v-card variant="flat" color="transparent">
           <v-img :src="topic.image" height="300" cover class="rounded-lg mb-6 bg-grey-lighten-2"></v-img>
           <div class="text-body-1 content-html" v-html="topic.content"></div>
         </v-card>
@@ -74,4 +74,5 @@ const topic = computed(() => {
 .content-html li {
   margin-bottom: 0.5rem;
 }
+
 </style>

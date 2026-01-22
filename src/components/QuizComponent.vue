@@ -1,67 +1,159 @@
 <template>
-  <v-card class="mt-4" elevation="2">
-    <v-card-title class="bg-primary text-white">
-      Quiz: Test Your Knowledge
-    </v-card-title>
+  <v-card class="mt-8 mx-auto" elevation="4" max-width="800" rounded="lg">
+    <v-card-item class="bg-primary py-6 px-6">
+      <v-card-title class="text-h4 font-weight-bold text-white mb-1">
+        <v-icon icon="mdi-lightbulb-on" class="mr-3"></v-icon>
+        Test Your Knowledge
+      </v-card-title>
+      <v-card-subtitle class="text-white text-opacity-80 text-body-1">
+        Answer the following questions to see how much you've learned.
+      </v-card-subtitle>
+    </v-card-item>
     
-    <v-card-text class="pt-4">
+    <v-card-text class="pa-6">
       <div v-if="!submitted">
-        <div v-for="(question, index) in questions" :key="question.id" class="mb-6">
-          <p class="text-h6 mb-2">{{ index + 1 }}. {{ question.text }}</p>
-          <v-radio-group v-model="answers[index]" hide-details>
-            <v-radio
-              v-for="(option, optIndex) in question.options"
-              :key="optIndex"
-              :label="option"
-              :value="optIndex"
-              color="primary"
-            ></v-radio>
-          </v-radio-group>
+        <v-window v-model="currentQuestionStep">
+          <v-window-item v-for="(question, index) in questions" :key="question.id" :value="index">
+            <div class="mb-6">
+              <div class="d-flex align-center mb-4">
+                <v-avatar color="secondary" size="36" class="mr-3 font-weight-bold text-white">
+                  {{ index + 1 }}
+                </v-avatar>
+                <h3 class="text-h6 font-weight-medium">{{ question.text }}</h3>
+              </div>
+              
+              <v-radio-group v-model="answers[index]" class="ml-2">
+                <v-radio
+                  v-for="(option, optIndex) in question.options"
+                  :key="optIndex"
+                  :label="option"
+                  :value="optIndex"
+                  color="secondary"
+                  class="mb-2"
+                ></v-radio>
+              </v-radio-group>
+            </div>
+          </v-window-item>
+        </v-window>
+
+        <div class="d-flex justify-space-between align-center mt-6">
+           <v-btn 
+            v-if="currentQuestionStep > 0"
+            variant="text" 
+            prepend-icon="mdi-arrow-left"
+            @click="currentQuestionStep--"
+          >
+            Previous
+          </v-btn>
+          <v-spacer v-else></v-spacer>
+
+          <v-btn 
+            v-if="currentQuestionStep < questions.length - 1"
+            color="primary" 
+            append-icon="mdi-arrow-right"
+            @click="currentQuestionStep++"
+            elevation="2"
+          >
+            Next
+          </v-btn>
+          <v-btn 
+            v-else
+            color="success" 
+            size="large" 
+            prepend-icon="mdi-check"
+            @click="submitQuiz" 
+            :disabled="!allAnswered"
+            elevation="3"
+          >
+            Submit Quiz
+          </v-btn>
         </div>
         
-        <v-btn color="primary" size="large" block @click="submitQuiz" :disabled="!allAnswered">
-          Submit Answers
-        </v-btn>
+        <div class="text-caption text-center mt-4 text-medium-emphasis">
+          Question {{ currentQuestionStep + 1 }} of {{ questions.length }}
+        </div>
+        <v-progress-linear 
+          :model-value="((currentQuestionStep + 1) / questions.length) * 100" 
+          color="secondary" 
+          height="6" 
+          class="mt-2 rounded-pill"
+        ></v-progress-linear>
       </div>
 
       <div v-else>
-        <div class="text-center mb-6">
+        <div class="text-center py-8">
           <v-progress-circular
             :model-value="scorePercentage"
             :color="scoreColor"
-            size="100"
+            size="150"
             width="15"
+            class="mb-6"
+            bg-color="grey-lighten-4"
           >
-            {{ score }} / {{ questions.length }}
+            <div class="d-flex flex-column align-center">
+              <span class="text-h3 font-weight-bold">{{ score }}/{{ questions.length }}</span>
+              <span class="text-caption text-uppercase font-weight-medium text-medium-emphasis">Score</span>
+            </div>
           </v-progress-circular>
-          <h3 class="mt-4" :class="`text-${scoreColor}`">{{ feedbackMessage }}</h3>
+          
+          <v-alert
+            :color="scoreColor"
+            :icon="scorePercentage >= 80 ? 'mdi-trophy' : 'mdi-information'"
+            variant="tonal"
+            class="mb-8 mx-auto"
+            max-width="600"
+            border="start"
+          >
+            <h3 class="text-h6 font-weight-bold mb-1">{{ feedbackMessage }}</h3>
+          </v-alert>
         </div>
 
-        <v-expansion-panels>
+        <h3 class="text-h5 font-weight-bold mb-4 ml-1">Review Answers</h3>
+        <v-expansion-panels variant="popout" class="mb-6">
           <v-expansion-panel
             v-for="(question, index) in questions"
             :key="question.id"
-            :class="isCorrect(index) ? 'bg-green-lighten-5' : 'bg-red-lighten-5'"
+            :class="isCorrect(index) ? 'border-success' : 'border-error'"
           >
             <v-expansion-panel-title>
-              <v-icon :color="isCorrect(index) ? 'success' : 'error'" class="mr-2">
-                {{ isCorrect(index) ? 'mdi-check-circle' : 'mdi-close-circle' }}
-              </v-icon>
-              {{ question.text }}
+              <template v-slot:default="{ expanded }">
+                <v-row no-gutters>
+                  <v-col cols="1" class="d-flex justify-center">
+                     <v-icon :color="isCorrect(index) ? 'success' : 'error'">
+                      {{ isCorrect(index) ? 'mdi-check-circle' : 'mdi-close-circle' }}
+                    </v-icon>
+                  </v-col>
+                  <v-col class="d-flex align-center font-weight-medium">
+                    {{ question.text }}
+                  </v-col>
+                </v-row>
+              </template>
             </v-expansion-panel-title>
             <v-expansion-panel-text>
-              <p><strong>Your Answer:</strong> {{ getUserAnswer(question, index) }}</p>
-              <p><strong>Correct Answer:</strong> {{ question.options?.[question.correctAnswer] }}</p>
-              <v-alert type="info" variant="tonal" class="mt-2" density="compact">
-                {{ question.explanation }}
-              </v-alert>
+              <div class="pa-2">
+                <div class="mb-3">
+                  <v-chip size="small" :color="isCorrect(index) ? 'success' : 'error'" class="mr-2 font-weight-bold" label>Your Answer</v-chip>
+                  <span class="text-body-1">{{ getUserAnswer(question, index) }}</span>
+                </div>
+                
+                <div v-if="!isCorrect(index)" class="mb-3">
+                  <v-chip size="small" color="success" class="mr-2 font-weight-bold" variant="outlined" label>Correct Answer</v-chip>
+                  <span class="text-body-1">{{ question.options?.[question.correctAnswer] }}</span>
+                </div>
+
+                <v-alert type="info" variant="tonal" class="mt-4" density="comfortable" icon="mdi-school">
+                   <strong>Explanation:</strong> {{ question.explanation }}
+                </v-alert>
+              </div>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
 
-        <v-btn class="mt-6" variant="outlined" block @click="resetQuiz">
-          Try Again
-        </v-btn>
+        <div class="d-flex justify-center">
+          <v-btn class="mt-2" variant="outlined" color="primary" size="large" @click="resetQuiz" prepend-icon="mdi-refresh">
+            Retake Quiz
+          </v-btn>
+        </div>
       </div>
     </v-card-text>
   </v-card>
@@ -77,6 +169,7 @@ const props = defineProps<{
 
 const answers = ref<number[]>(new Array(props.questions.length).fill(-1));
 const submitted = ref(false);
+const currentQuestionStep = ref(0);
 
 const allAnswered = computed(() => {
   return answers.value.every(a => a !== -1);
@@ -116,6 +209,7 @@ function isCorrect(index: number) {
 function resetQuiz() {
   answers.value = new Array(props.questions.length).fill(-1);
   submitted.value = false;
+  currentQuestionStep.value = 0;
 }
 
 function getUserAnswer(question: Question, index: number) {

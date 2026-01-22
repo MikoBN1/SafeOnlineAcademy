@@ -21,14 +21,14 @@ export default createVuetify({
       safeOnlineTheme: {
         dark: false,
         colors: {
-          primary: '#2196F3', // Blue
-          secondary: '#4CAF50', // Green
-          accent: '#FFC107', // Amber
-          error: '#FF5252',
-          info: '#2196F3',
-          success: '#4CAF50',
-          warning: '#FFC107',
-          background: '#F5F5F5',
+          primary: '#1A237E', // Deep Indigo
+          secondary: '#00BFA5', // Teal Accent
+          accent: '#FFAB00', // Amber Accent
+          error: '#D32F2F',
+          info: '#1976D2',
+          success: '#388E3C',
+          warning: '#FFA000',
+          background: '#F5F7FA', // Light cool grey
           surface: '#FFFFFF',
         },
       },
