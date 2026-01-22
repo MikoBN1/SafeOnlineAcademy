@@ -7,10 +7,10 @@
           <v-toolbar color="primary" density="compact">
             <v-toolbar-title class="text-subtitle-1 font-weight-bold">
               <v-icon icon="mdi-email-outline" start></v-icon>
-              Inbox Simulation
+              {{ $t('general.inboxSimulation') }}
             </v-toolbar-title>
             <v-chip size="small" color="white" variant="outlined" class="mr-2">
-              Score: {{ score }}/{{ completedCount }}
+              {{ $t('phishing.score') }}: {{ score }}/{{ completedCount }}
             </v-chip>
           </v-toolbar>
           
@@ -30,14 +30,14 @@
                 </v-avatar>
               </template>
               
-              <v-list-item-title class="font-weight-bold">{{ email.senderName }}</v-list-item-title>
-              <v-list-item-subtitle>{{ email.subject }}</v-list-item-subtitle>
+              <v-list-item-title class="font-weight-bold">{{ $t(`phishing.scenarios.${email.id}.senderName`) }}</v-list-item-title>
+              <v-list-item-subtitle>{{ $t(`phishing.scenarios.${email.id}.subject`) }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
           
           <v-divider></v-divider>
           <div class="pa-4 bg-grey-lighten-4 text-caption text-center">
-            Select an email to inspect it.
+            {{ $t('phishing.selectEmail') }}
           </div>
         </v-card>
       </v-col>
@@ -48,7 +48,7 @@
           <!-- Email Header -->
           <div class="pa-6 border-b">
             <div class="d-flex justify-space-between align-start mb-4">
-              <h2 class="text-h5 font-weight-bold">{{ selectedEmail.subject }}</h2>
+              <h2 class="text-h5 font-weight-bold">{{ $t(`phishing.scenarios.${selectedEmail.id}.subject`) }}</h2>
               <div class="d-flex flex-column align-end">
                 <span class="text-body-2 text-medium-emphasis">{{ selectedEmail.date }}</span>
               </div>
@@ -56,10 +56,10 @@
             
             <div class="d-flex align-center">
               <v-avatar color="primary" class="mr-3" size="48">
-                <span class="text-h6 text-white">{{ selectedEmail.senderName.charAt(0) }}</span>
+                <span class="text-h6 text-white">{{ $t(`phishing.scenarios.${selectedEmail.id}.senderName`).charAt(0) }}</span>
               </v-avatar>
               <div>
-                <div class="font-weight-bold">{{ selectedEmail.senderName }}</div>
+                <div class="font-weight-bold">{{ $t(`phishing.scenarios.${selectedEmail.id}.senderName`) }}</div>
                 <div class="text-body-2 text-medium-emphasis">
                   &lt;{{ selectedEmail.senderEmail }}&gt;
                 </div>
@@ -69,14 +69,14 @@
 
           <!-- Email Body -->
           <v-card-text class="flex-grow-1 overflow-y-auto pa-6">
-            <div class="email-body text-body-1" v-html="selectedEmail.body"></div>
+            <div class="email-body text-body-1" v-html="$t(`phishing.scenarios.${selectedEmail.id}.body`)"></div>
           </v-card-text>
 
           <!-- Interaction / Decision Area -->
           <v-divider></v-divider>
           <div class="pa-6 bg-grey-lighten-5">
             <div v-if="!hasAnswered(selectedEmail.id)">
-              <div class="text-h6 mb-4 text-center">Is this email safe or a phishing attempt?</div>
+              <div class="text-h6 mb-4 text-center">{{ $t('phishing.question') }}</div>
               <div class="d-flex justify-center gap-4">
                 <v-btn 
                   color="error" 
@@ -86,7 +86,7 @@
                   @click="makeDecision(true)"
                   elevation="2"
                 >
-                  Report Phishing
+                  {{ $t('phishing.report') }}
                 </v-btn>
                 <v-btn 
                   color="success" 
@@ -95,7 +95,7 @@
                   @click="makeDecision(false)"
                   elevation="2"
                 >
-                  Mark as Safe
+                  {{ $t('phishing.safe') }}
                 </v-btn>
               </div>
             </div>
@@ -110,10 +110,10 @@
               class="mb-0"
             >
               <div class="text-body-1 mb-2">
-                {{ selectedEmail.explanation }}
+                {{ $t(`phishing.scenarios.${selectedEmail.id}.explanation`) }}
               </div>
               <div v-if="selectedEmail.isPhishing && selectedEmail.redFlags" class="mt-2">
-                <strong>Red Flags:</strong>
+                <strong>{{ $t('phishing.redFlags') }}</strong>
                 <v-chip 
                   v-for="flag in selectedEmail.redFlags" 
                   :key="flag" 
@@ -122,7 +122,7 @@
                   class="ml-2" 
                   variant="outlined"
                 >
-                  {{ flag }}
+                  {{ $t(`phishing.flags.${flag}`) }}
                 </v-chip>
               </div>
             </v-alert>
@@ -133,7 +133,7 @@
         <v-sheet v-else class="flex-grow-1 d-flex align-center justify-center bg-grey-lighten-4 rounded-lg border border-dashed">
           <div class="text-center">
             <v-icon icon="mdi-email-search-outline" size="64" color="grey"></v-icon>
-            <h3 class="text-h5 text-grey mt-4">Select an email to start training</h3>
+            <h3 class="text-h5 text-grey mt-4">{{ $t('phishing.emptyState') }}</h3>
           </div>
         </v-sheet>
       </v-col>
@@ -143,7 +143,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { emailScenarios, type EmailScenario } from '../data/phishing_simulation';
+
+const { t } = useI18n();
 
 const selectedEmail = ref<EmailScenario | null>(null);
 const userDecisions = ref<Record<number, boolean>>({}); // Map: emailId -> result (true=correct, false=wrong)
@@ -184,7 +187,7 @@ function getResultType(id: number) {
 }
 
 function getResultTitle(id: number) {
-  return userDecisions.value[id] ? 'Correct Decision!' : 'Incorrect Decision';
+  return userDecisions.value[id] ? t('phishing.correct') : t('phishing.incorrect');
 }
 </script>
 

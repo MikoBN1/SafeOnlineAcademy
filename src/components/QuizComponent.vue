@@ -3,10 +3,10 @@
     <v-card-item class="bg-primary py-6 px-6">
       <v-card-title class="text-h4 font-weight-bold text-white mb-1">
         <v-icon icon="mdi-lightbulb-on" class="mr-3"></v-icon>
-        Test Your Knowledge
+        {{ $t('quiz.title') }}
       </v-card-title>
       <v-card-subtitle class="text-white text-opacity-80 text-body-1">
-        Answer the following questions to see how much you've learned.
+        {{ $t('quiz.subtitle') }}
       </v-card-subtitle>
     </v-card-item>
     
@@ -43,7 +43,7 @@
             prepend-icon="mdi-arrow-left"
             @click="currentQuestionStep--"
           >
-            Previous
+            {{ $t('quiz.previous') }}
           </v-btn>
           <v-spacer v-else></v-spacer>
 
@@ -54,7 +54,7 @@
             @click="currentQuestionStep++"
             elevation="2"
           >
-            Next
+            {{ $t('quiz.next') }}
           </v-btn>
           <v-btn 
             v-else
@@ -65,12 +65,12 @@
             :disabled="!allAnswered"
             elevation="3"
           >
-            Submit Quiz
+            {{ $t('quiz.submit') }}
           </v-btn>
         </div>
         
         <div class="text-caption text-center mt-4 text-medium-emphasis">
-          Question {{ currentQuestionStep + 1 }} of {{ questions.length }}
+          {{ $t('quiz.questionProgress', { current: currentQuestionStep + 1, total: questions.length }) }}
         </div>
         <v-progress-linear 
           :model-value="((currentQuestionStep + 1) / questions.length) * 100" 
@@ -92,7 +92,7 @@
           >
             <div class="d-flex flex-column align-center">
               <span class="text-h3 font-weight-bold">{{ score }}/{{ questions.length }}</span>
-              <span class="text-caption text-uppercase font-weight-medium text-medium-emphasis">Score</span>
+              <span class="text-caption text-uppercase font-weight-medium text-medium-emphasis">{{ $t('quiz.score') }}</span>
             </div>
           </v-progress-circular>
           
@@ -108,7 +108,7 @@
           </v-alert>
         </div>
 
-        <h3 class="text-h5 font-weight-bold mb-4 ml-1">Review Answers</h3>
+        <h3 class="text-h5 font-weight-bold mb-4 ml-1">{{ $t('quiz.review') }}</h3>
         <v-expansion-panels variant="popout" class="mb-6">
           <v-expansion-panel
             v-for="(question, index) in questions"
@@ -132,17 +132,17 @@
             <v-expansion-panel-text>
               <div class="pa-2">
                 <div class="mb-3">
-                  <v-chip size="small" :color="isCorrect(index) ? 'success' : 'error'" class="mr-2 font-weight-bold" label>Your Answer</v-chip>
+                  <v-chip size="small" :color="isCorrect(index) ? 'success' : 'error'" class="mr-2 font-weight-bold" label>{{ $t('quiz.yourAnswer') }}</v-chip>
                   <span class="text-body-1">{{ getUserAnswer(question, index) }}</span>
                 </div>
                 
                 <div v-if="!isCorrect(index)" class="mb-3">
-                  <v-chip size="small" color="success" class="mr-2 font-weight-bold" variant="outlined" label>Correct Answer</v-chip>
+                  <v-chip size="small" color="success" class="mr-2 font-weight-bold" variant="outlined" label>{{ $t('quiz.correctAnswer') }}</v-chip>
                   <span class="text-body-1">{{ question.options?.[question.correctAnswer] }}</span>
                 </div>
 
                 <v-alert type="info" variant="tonal" class="mt-4" density="comfortable" icon="mdi-school">
-                   <strong>Explanation:</strong> {{ question.explanation }}
+                   <strong>{{ $t('quiz.explanation') }}</strong> {{ question.explanation }}
                 </v-alert>
               </div>
             </v-expansion-panel-text>
@@ -151,7 +151,7 @@
 
         <div class="d-flex justify-center">
           <v-btn class="mt-2" variant="outlined" color="primary" size="large" @click="resetQuiz" prepend-icon="mdi-refresh">
-            Retake Quiz
+            {{ $t('quiz.retake') }}
           </v-btn>
         </div>
       </div>
@@ -161,7 +161,10 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Question } from '../data/topics';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   questions: Question[];
@@ -192,10 +195,10 @@ const scoreColor = computed(() => {
 });
 
 const feedbackMessage = computed(() => {
-  if (scorePercentage.value === 100) return 'Perfect! You are a security expert!';
-  if (scorePercentage.value >= 80) return 'Great job! You know your stuff.';
-  if (scorePercentage.value >= 50) return 'Good effort, but there is room for improvement.';
-  return 'Keep learning! Review the material and try again.';
+  if (scorePercentage.value === 100) return t('quiz.feedback.perfect');
+  if (scorePercentage.value >= 80) return t('quiz.feedback.great');
+  if (scorePercentage.value >= 50) return t('quiz.feedback.good');
+  return t('quiz.feedback.tryAgain');
 });
 
 function submitQuiz() {
@@ -217,6 +220,6 @@ function getUserAnswer(question: Question, index: number) {
   if (ansIdx !== undefined && ansIdx !== -1) {
     return question.options[ansIdx];
   }
-  return 'No answer';
+  return t('quiz.noAnswer');
 }
 </script>
